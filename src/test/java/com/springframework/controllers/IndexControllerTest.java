@@ -1,7 +1,6 @@
 package com.springframework.controllers;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.*;
@@ -25,26 +24,26 @@ import com.springframework.domain.Recipe;
 import com.springframework.services.RecipeService;
 
 public class IndexControllerTest {
-	
+
 	@Mock
 	RecipeService recipeService;
 
 	@Mock
 	Model model;
-	
+
 	IndexController controller;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		
+
 		controller = new IndexController(recipeService);
 	}
-	
+
 	@Test
 	public void testMockMVC() throws Exception {
 		MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-		
+
 		mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(view().name("index"));
 	}
 
@@ -53,18 +52,18 @@ public class IndexControllerTest {
 		//Given
 		Set<Recipe> recipes = new HashSet<>();
 		recipes.add(new Recipe());
-		
+
 		Recipe recipe = new Recipe();
 		recipe.setId(1L);
 		recipes.add(recipe);
-		
+
 		when(recipeService.getRecipes()).thenReturn(recipes);
-		
+
 		ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
-		
+
 		//When
 		String viewName = controller.getIndexPage(model);
-		
+
 		//Then
 		assertEquals("index", viewName);
 		verify(recipeService, times(1)).getRecipes();
